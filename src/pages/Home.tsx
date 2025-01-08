@@ -1,4 +1,35 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import RandomRecipeCard from "../components/RandomRecipeCard";
+
+interface RandomRecipeTypes {
+  strMeal: string;
+  strMealThumb: string;
+  strArea: string;
+  idMeal: string;
+}
+
 export default function Home() {
+  const [data, setData] = useState({} as RandomRecipeTypes);
+
+  useEffect(() => {
+    axios
+      .get("https://www.themealdb.com/api/json/v1/1/random.php")
+      .then((response) => {
+        setData(response.data.meals[0]);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const getRandomMeal = () => {
+    axios
+      .get("https://www.themealdb.com/api/json/v1/1/random.php")
+      .then((response) => {
+        setData(response.data.meals[0]);
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <>
       <h1>Bienvenue sur Kitchen React</h1>
@@ -8,6 +39,10 @@ export default function Home() {
         repudiandae error dolore sint temporibus eveniet perferendis illum. Ex,
         itaque.
       </p>
+      <button type="button" onClick={getRandomMeal}>
+        Générer une recette aléatoire
+      </button>
+      <RandomRecipeCard recipe={data} />
     </>
   );
 }
